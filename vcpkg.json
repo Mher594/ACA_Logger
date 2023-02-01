@@ -1,0 +1,11 @@
+{
+    "name": "logger",
+    "version": "0.0.1",
+    "builtin-baseline": "43235cf746cddb4981a8ef4abdb80aafe4d4e0e2",
+    "dependencies": [
+        {
+            "name": "toml11",
+            "version>=": "3.7.1"
+        }
+    ]
+}

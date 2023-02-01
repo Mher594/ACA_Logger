@@ -1,0 +1,3 @@
+[logger]
+file_path = "D:/Workspace/ACA_Logger/log.txt"
+log_severity = 2 # Warning
