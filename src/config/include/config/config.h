@@ -12,8 +12,15 @@ class Config
 
     void init(const std::string &filepath);
 
-    [[nodiscard]] std::string getLogFilePath() const;
-    [[nodiscard]] int getMinLogSeverity() const;
+    [[nodiscard]] auto getLogFilePath() const -> std::string
+    {
+        return m_logFilePath;
+    }
+
+    [[nodiscard]] auto getMinLogSeverity() const -> int
+    {
+        return m_minLogSeverity;
+    }
 
   private:
     std::string m_logFilePath;

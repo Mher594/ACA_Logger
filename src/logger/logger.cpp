@@ -7,7 +7,7 @@
 namespace ACA
 {
 
-std::string LevelToString(Level logLevel)
+auto LevelToString(Level logLevel) -> std::string
 {
     switch (logLevel)
     {
@@ -32,8 +32,8 @@ class Logger
     Logger() = default;
     Logger(const Logger &) = delete;
     Logger(Logger &&) = delete;
-    Logger &operator=(const Logger &) = delete;
-    Logger &operator=(Logger &&) = delete;
+    auto operator=(const Logger &) -> Logger & = delete;
+    auto operator=(Logger &&) -> Logger & = delete;
     ~Logger();
 
     void setFilePathAndOpen(const std::string &filepath);
@@ -45,7 +45,7 @@ class Logger
     int m_loglevel{0};
 };
 
-Logger *getLog()
+auto getLog() -> Logger *
 {
     const static std::unique_ptr<Logger> slog = std::make_unique<Logger>();
     return slog.get();
@@ -80,8 +80,9 @@ void Logger::addLog(Level logLevel, const std::string &msg)
     {
         if (m_logfile.is_open())
         {
-            using namespace std::chrono;
-            auto local = zoned_time{current_zone(), system_clock::now()};
+            using std::chrono::system_clock;
+            using std::chrono::zoned_time;
+            auto local = zoned_time{std::chrono::current_zone(), system_clock::now()};
             m_logfile << local << ", " << LevelToString(logLevel) << ": " << msg << std::endl;
         }
     }

@@ -1,19 +1,17 @@
 #include "config/config.h"
 #include "logger/logger.h"
 
-using namespace ACA;
-
-int main()
+auto main() -> int
 {
-    Config obj;
+    ACA::Config obj;
     obj.init("D:/Workspace/ACA_Logger/logger.toml");
 
-    initLog(obj);
-    log(Level::Debug, "random log 1");
-    log(Level::Info, "random log 2");
-    log(Level::Warning, "random log 3");
-    log(Level::Error, "random log 4");
-    log(Level::Fatal, "random log 5");
+    ACA::initLog(obj);
+    ACA::log(ACA::Level::Debug, "random log 1");
+    ACA::log(ACA::Level::Info, "random log 2");
+    ACA::log(ACA::Level::Warning, "random log 3");
+    ACA::log(ACA::Level::Error, "random log 4");
+    ACA::log(ACA::Level::Fatal, "random log 5");
 
     return 0;
 }
