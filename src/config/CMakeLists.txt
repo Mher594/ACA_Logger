@@ -12,4 +12,3 @@ target_include_directories(config PUBLIC include)
 target_link_libraries(config
  PRIVATE
  toml11::toml11)
-

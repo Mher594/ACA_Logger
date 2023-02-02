@@ -1,5 +1,7 @@
 [logger]
-file_path = "D:/Workspace/ACA_Logger/log.txt"
+
+log_path = "logs" # logs folder in executable folder
+
 # Log level
 # Debug   = 0
 # Info    = 1

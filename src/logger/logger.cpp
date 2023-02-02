@@ -1,8 +1,17 @@
 #include "logger/logger.h"
 
+#include <filesystem>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "config/config.h"
+
+namespace
+{
+
+const std::string LogFileName{"log.txt"};
+
+}
 
 namespace ACA
 {
@@ -36,7 +45,7 @@ class Logger
     auto operator=(Logger &&) -> Logger & = delete;
     ~Logger();
 
-    void setFilePathAndOpen(const std::string &filepath);
+    void setLogPathAndOpen(const std::string &logPath);
     void setMinLogSeverity(int logSeverity);
     void addLog(Level logLevel, const std::string &msg);
 
@@ -54,7 +63,7 @@ auto getLog() -> Logger *
 void initLog(const Config &config)
 {
     Logger *glog = getLog();
-    glog->setFilePathAndOpen(config.getLogFilePath());
+    glog->setLogPathAndOpen(config.getLogPath());
     glog->setMinLogSeverity(config.getMinLogSeverity());
     glog->addLog(Level::Info, "Starting logging system.");
 }
@@ -64,9 +73,16 @@ void log(Level logLevel, const std::string &msg)
     getLog()->addLog(logLevel, msg);
 }
 
-void Logger::setFilePathAndOpen(const std::string &filepath)
+void Logger::setLogPathAndOpen(const std::string &logPath)
 {
-    m_logfile.open(filepath);
+    namespace fs = std::filesystem;
+    const auto pathToCreate = fs::path(logPath);
+    if (!fs::exists(pathToCreate))
+    {
+        fs::create_directories(pathToCreate);
+    }
+    const auto filePath = pathToCreate / fs::path(LogFileName);
+    m_logfile.open(filePath.string());
 }
 
 void Logger::setMinLogSeverity(int logSeverity)
