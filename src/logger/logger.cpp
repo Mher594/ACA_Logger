@@ -78,15 +78,19 @@ void Logger::addLog(Level logLevel, const std::string &msg)
 {
     if (static_cast<int>(logLevel) >= m_loglevel)
     {
-        if (m_logfile.is_open())
-        {
-            using boost::posix_time::microsec_clock;
-            using boost::posix_time::ptime;
-            const ptime date_time = microsec_clock::universal_time();
-            m_logfile << boost::posix_time::to_iso_extended_string(date_time) << ", " << LevelToString(logLevel) << ": "
-                      << msg << std::endl;
-        }
+        return;
     }
+
+    if (!m_logfile.is_open())
+    {
+        return;
+    }
+
+    using boost::posix_time::microsec_clock;
+    using boost::posix_time::ptime;
+    const ptime date_time = microsec_clock::universal_time();
+    m_logfile << boost::posix_time::to_iso_extended_string(date_time) << ", " << LevelToString(logLevel) << ": " << msg
+              << std::endl;
 }
 
 Logger::~Logger()
@@ -95,9 +99,13 @@ Logger::~Logger()
     {
         addLog(Level::Info, "Stopped logging system.");
     }
+    catch (const std::exception &e)
+    {
+        std::cout << e.what();
+    }
     catch (...)
     {
-        // todo!
+        std::cout << "Default Exception";
     }
 }
 
