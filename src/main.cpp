@@ -4,7 +4,7 @@
 namespace
 {
 
-const std::string_view ConfigFilePath{"D:/Workspace/ACA_Logger/logger.toml"};
+const std::string ConfigFilePath{"D:/Workspace/ACA_Logger/logger.toml"};
 
 }
 

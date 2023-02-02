@@ -5,7 +5,7 @@
 namespace ACA
 {
 
-void Config::init(const std::string_view filepath)
+void Config::init(const std::string &filepath)
 {
     auto data = toml::parse(filepath);
     const auto &logger = toml::find(data, "logger");
