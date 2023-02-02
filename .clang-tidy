@@ -1,4 +1,5 @@
 Checks: >
+  HeaderFilterRegex: 'src/.*'
   -*,
   bugprone-*,
   google-*,
@@ -14,6 +15,7 @@ Checks: >
   -readability-named-parameter,
   -readability-braces-around-statements,
   -readability-magic-numbers
+  -header-filter=
 
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"

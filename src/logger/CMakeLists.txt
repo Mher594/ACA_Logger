@@ -1,3 +1,5 @@
+find_package(Boost COMPONENTS date_time REQUIRED)
+
 add_library(logger logger.cpp)
 
 target_compile_options(logger PRIVATE
@@ -9,5 +11,6 @@ target_include_directories(logger PUBLIC include)
 
 target_link_libraries(logger
  PRIVATE
- config)
+ config
+ Boost::date_time)
 

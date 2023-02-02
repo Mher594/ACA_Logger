@@ -1,6 +1,6 @@
 #include "logger/logger.h"
 
-#include <chrono>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "config/config.h"
 
@@ -80,17 +80,25 @@ void Logger::addLog(Level logLevel, const std::string &msg)
     {
         if (m_logfile.is_open())
         {
-            using std::chrono::system_clock;
-            using std::chrono::zoned_time;
-            auto local = zoned_time{std::chrono::current_zone(), system_clock::now()};
-            m_logfile << local << ", " << LevelToString(logLevel) << ": " << msg << std::endl;
+            using boost::posix_time::microsec_clock;
+            using boost::posix_time::ptime;
+            const ptime date_time = microsec_clock::universal_time();
+            m_logfile << boost::posix_time::to_iso_extended_string(date_time) << ", " << LevelToString(logLevel) << ": "
+                      << msg << std::endl;
         }
     }
 }
 
 Logger::~Logger()
 {
-    addLog(Level::Info, "Stopped logging system.");
+    try
+    {
+        addLog(Level::Info, "Stopped logging system.");
+    }
+    catch (...)
+    {
+        // todo!
+    }
 }
 
 } // namespace ACA
