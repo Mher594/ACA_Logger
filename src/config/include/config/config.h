@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 
 namespace ACA
 {
@@ -10,7 +10,7 @@ class Config
   public:
     Config() = default;
 
-    void init(const std::string &filepath);
+    void init(std::string_view filepath);
 
     [[nodiscard]] auto getLogFilePath() const -> std::string
     {

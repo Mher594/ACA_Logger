@@ -1,10 +1,17 @@
 #include "config/config.h"
 #include "logger/logger.h"
 
+namespace
+{
+
+const std::string_view ConfigFilePath{"D:/Workspace/ACA_Logger/logger.toml"};
+
+}
+
 auto main() -> int
 {
     ACA::Config obj;
-    obj.init("D:/Workspace/ACA_Logger/logger.toml");
+    obj.init(ConfigFilePath);
 
     ACA::initLog(obj);
     ACA::log(ACA::Level::Debug, "random log 1");
