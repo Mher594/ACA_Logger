@@ -14,7 +14,14 @@ const std::string ConfigFilePath{"logger.toml"};
 auto main() -> int
 {
     ACA::Config obj;
-    obj.init(ConfigFilePath);
+    try
+    {
+        obj.init(ConfigFilePath);
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "Initializing config failed\n" << e.what() << '\n' << "Default values will be used\n";
+    }
 
     ACA::initLog(obj);
 
