@@ -1,7 +1,6 @@
 #include "config/config.h"
 
 #include <filesystem>
-#include <iostream>
 
 #include <toml.hpp>
 
@@ -26,7 +25,7 @@ void Config::init(const std::string &filepath)
         throw std::invalid_argument(std::string("File: ") + configFilePath.string() + std::string(" does not exists"));
     }
 
-    auto data = toml::parse(filepath);
+    const auto data = toml::parse(filepath);
     const auto &logger = toml::find(data, ConfigLoggerTableKey);
 
     if (logger.contains(ConfigLoggerPathKey))
