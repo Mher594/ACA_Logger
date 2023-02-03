@@ -10,11 +10,11 @@ namespace ACA
 // Severity level enum.
 enum class Level
 {
-    Debug,
-    Info,
-    Warning,
-    Error,
-    Fatal
+    Debug = 0,
+    Info = 1,
+    Warning = 2,
+    Error = 3,
+    Fatal = 4
 };
 
 class Config;
