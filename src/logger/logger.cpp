@@ -1,7 +1,10 @@
 #include "logger/logger.h"
 
 #include <filesystem>
+#include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -12,9 +15,12 @@
 namespace
 {
 
-const std::string LogFileName{"log.txt"};
+const std::string DefaultLogDirectory{"logs"};
+const std::string DefaultLogFileName{"log.txt"};
 
-}
+constexpr int DefaultLogLevel{2}; // Level::Warning
+
+} // namespace
 
 namespace ACA
 {
@@ -67,8 +73,8 @@ auto getLog() -> Logger *
 void initLog(const Config &config)
 {
     Logger *glog = getLog();
-    glog->setLogPathAndOpen(config.getLogPath());
-    glog->setMinLogSeverity(config.getMinLogSeverity());
+    glog->setLogPathAndOpen(config.getLogPath().value_or(DefaultLogDirectory));
+    glog->setMinLogSeverity(config.getMinLogSeverity().value_or(DefaultLogLevel));
     glog->addLog(Level::Info, "Starting logging system.");
 }
 
@@ -83,9 +89,16 @@ void Logger::setLogPathAndOpen(const std::string &logPath)
     const auto pathToCreate = fs::path(logPath);
     if (!fs::exists(pathToCreate))
     {
-        fs::create_directories(pathToCreate);
+        try
+        {
+            fs::create_directories(pathToCreate);
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
     }
-    const auto filePath = pathToCreate / fs::path(LogFileName);
+    const auto filePath = pathToCreate / fs::path(DefaultLogFileName);
     m_logfile.open(filePath.string());
 }
 
@@ -123,11 +136,7 @@ Logger::~Logger()
     }
     catch (const std::exception &e)
     {
-        std::cout << e.what();
-    }
-    catch (...)
-    {
-        std::cout << "Default Exception";
+        std::cerr << e.what();
     }
 }
 

@@ -4,6 +4,15 @@
 
 #include <toml.hpp>
 
+namespace
+{
+
+const std::string ConfigLoggerTableKey{"logger"};
+const std::string ConfigLoggerPathKey{"log_path"};
+const std::string ConfigLoggerSeverityKey{"log_severity"};
+
+} // namespace
+
 namespace ACA
 {
 
@@ -13,13 +22,21 @@ void Config::init(const std::string &filepath)
     const auto configFilePath = fs::path(filepath);
     if (!fs::exists(configFilePath))
     {
-        return;
+        throw std::invalid_argument(std::string("File: ") + configFilePath.string() + std::string(" does not exists"));
     }
 
-    auto data = toml::parse(filepath);
-    const auto &logger = toml::find(data, "logger");
-    m_logPath = toml::find<std::string>(logger, "log_path");
-    m_minLogSeverity = toml::find<int>(logger, "log_severity");
+    const auto data = toml::parse(filepath);
+    const auto &logger = toml::find(data, ConfigLoggerTableKey);
+
+    if (logger.contains(ConfigLoggerPathKey))
+    {
+        m_logPath = toml::find<std::string>(logger, ConfigLoggerPathKey);
+    }
+
+    if (logger.contains(ConfigLoggerSeverityKey))
+    {
+        m_minLogSeverity = toml::find<int>(logger, ConfigLoggerSeverityKey);
+    }
 }
 
 } // namespace ACA
