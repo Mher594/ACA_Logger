@@ -1,6 +1,9 @@
 #include "logger/logger.h"
 
 #include <filesystem>
+#include <iomanip>
+#include <mutex>
+#include <thread>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -52,6 +55,7 @@ class Logger
   private:
     std::ofstream m_logfile;
     int m_loglevel{0};
+    std::mutex m_fileMutex;
 };
 
 auto getLog() -> Logger *
@@ -92,7 +96,7 @@ void Logger::setMinLogSeverity(int logSeverity)
 
 void Logger::addLog(Level logLevel, const std::string &msg)
 {
-    if (static_cast<int>(logLevel) >= m_loglevel)
+    if (static_cast<int>(logLevel) < m_loglevel)
     {
         return;
     }
@@ -102,10 +106,12 @@ void Logger::addLog(Level logLevel, const std::string &msg)
         return;
     }
 
+    const std::lock_guard<std::mutex> lock(m_fileMutex);
     using boost::posix_time::microsec_clock;
     using boost::posix_time::ptime;
     const ptime date_time = microsec_clock::universal_time();
-    m_logfile << boost::posix_time::to_iso_extended_string(date_time) << ", " << LevelToString(logLevel) << ": " << msg
+    m_logfile << "Time: " << boost::posix_time::to_iso_extended_string(date_time) << ", thread #"
+              << std::this_thread::get_id() << ", LogLevel: " << LevelToString(logLevel) << ", message: " << msg
               << std::endl;
 }
 
